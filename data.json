@@ -1,0 +1,41 @@
+{
+  "contributions": 3281,
+  "commits": 2261,
+  "merged_prs": 130,
+  "repositories": 34,
+  "followers": 45,
+  "languages": [
+    [
+      "TypeScript",
+      44.6
+    ],
+    [
+      "JavaScript",
+      12.6
+    ],
+    [
+      "Java",
+      11.5
+    ],
+    [
+      "Vue",
+      6.4
+    ],
+    [
+      "Go",
+      3.0
+    ],
+    [
+      "Rust",
+      2.9
+    ],
+    [
+      "Python",
+      1.3
+    ],
+    [
+      "Other",
+      17.7
+    ]
+  ]
+}

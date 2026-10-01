@@ -1,0 +1,31 @@
+name: Refresh profile cards
+
+on:
+  schedule:
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [build.py]
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # PROFILE_TOKEN (a read-only PAT) lets the cards include private contributions and languages.
+      - run: python build.py
+        env:
+          PROFILE_TOKEN: ${{ secrets.PROFILE_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add assets data.json
+          git diff --cached --quiet || (git commit -m "Refresh profile cards" && git push)
