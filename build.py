@@ -12,8 +12,6 @@ DATA_CACHE = ROOT / "data.json"
 USERNAME = "yovinchen"
 TOKEN = os.environ.get("PROFILE_TOKEN") or os.environ.get("GITHUB_TOKEN")
 NON_CODE = {"CSS", "SCSS", "HTML", "PLpgSQL", "Shell", "Dockerfile", "Makefile"}
-LANG_COLORS = {"TypeScript": "#3178c6", "JavaScript": "#f1e05a", "Java": "#b07219", "Vue": "#41b883",
-               "Go": "#00add8", "Rust": "#dea584", "Python": "#3572a5", "Kotlin": "#a97bff", "Other": "#8b97a8"}
 
 DIRECTIONS = [
     ("Big Data", ["Cassandra", "Kafka", "Redis", "MySQL", "Data pipelines"]),
@@ -23,26 +21,21 @@ DIRECTIONS = [
 ]
 
 QUERY = """query($login: String!) { user(login: $login) {
-  followers { totalCount }
-  pullRequests(states: MERGED) { totalCount }
   repositories(ownerAffiliations: OWNER, isFork: false, first: 100) {
-    totalCount
     nodes { languages(first: 10, orderBy: {field: SIZE, direction: DESC}) { edges { size node { name } } } }
   }
-  contributionsCollection { totalCommitContributions contributionCalendar { totalContributions } }
 } }"""
 FONT = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
 MONO = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace"
 
 THEMES = {
-    "dark": dict(bg="#0d1117", card="#11161f", border="#222b38", text="#e6edf3",
-                 muted="#8b97a8", faint="#4b5566", accent="#7dd3fc", accent2="#c4b5fd",
-                 chip="#161d29"),
-    "light": dict(bg="#ffffff", card="#f8fafc", border="#e2e8f0", text="#0f172a",
-                  muted="#64748b", faint="#cbd5e1", accent="#0369a1", accent2="#6d28d9",
-                  chip="#f1f5f9"),
+    "dark": dict(bg="#0d1117", card="#0f1a14", border="#1f3326", text="#e6edf3",
+                 muted="#8fa89a", faint="#3f5a49", accent="#4ade80", accent2="#a3e635",
+                 chip="#132219", ramp=["#22c55e", "#4ade80", "#86efac", "#16a34a", "#a3e635", "#15803d", "#bbf7d0", "#3f5a49"]),
+    "light": dict(bg="#ffffff", card="#f3faf5", border="#d5eadc", text="#0f172a",
+                  muted="#5b6f63", faint="#b6cfbf", accent="#15803d", accent2="#4d7c0f",
+                  chip="#e9f6ee", ramp=["#15803d", "#22c55e", "#86efac", "#166534", "#65a30d", "#4ade80", "#bbf7d0", "#cbd5d0"]),
 }
-
 
 
 def fetch_data():
@@ -66,15 +59,7 @@ def fetch_data():
     languages = [(name, round(size / total * 100, 1)) for name, size in top]
     languages.append(("Other", round(other / total * 100, 1)))
 
-    calendar = user["contributionsCollection"]
-    return {
-        "contributions": calendar["contributionCalendar"]["totalContributions"],
-        "commits": calendar["totalCommitContributions"],
-        "merged_prs": user["pullRequests"]["totalCount"],
-        "repositories": user["repositories"]["totalCount"],
-        "followers": user["followers"]["totalCount"],
-        "languages": languages,
-    }
+    return {"languages": languages}
 
 
 def load_data():
@@ -104,7 +89,7 @@ def chips(x, y, labels, t, size=11):
 
 
 def hero(t):
-    w, h = 880, 280
+    w = 880
     lines = [
         ("$", "whoami", t["text"]),
         ("", "big data engineer", t["muted"]),
@@ -126,10 +111,7 @@ def hero(t):
                 f'<rect x="680" y="{y - 11}" width="8" height="14" fill="{t["accent"]}"><animate attributeName="opacity" values="1;0;1" dur="1.1s" repeatCount="indefinite"/></rect>')
     body = f'''<defs>
 <linearGradient id="g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{t["accent"]}"/><stop offset="1" stop-color="{t["accent2"]}"/></linearGradient>
-<pattern id="dots" width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="{t["border"]}"/></pattern>
 </defs>
-<rect x="0.5" y="0.5" width="{w - 1}" height="{h - 1}" rx="16" fill="{t["bg"]}" stroke="{t["border"]}"/>
-<rect x="1" y="1" width="{w - 2}" height="{h - 2}" rx="16" fill="url(#dots)" opacity="0.6"/>
 <text x="44" y="70" font-family="{MONO}" font-size="13" fill="{t["muted"]}">hi there, I'm</text>
 <text x="42" y="122" font-family="{FONT}" font-size="50" font-weight="700" letter-spacing="-1.5" fill="{t["text"]}">yovinchen</text>
 <rect x="44" y="140" width="64" height="3" rx="1.5" fill="url(#g)"/>
@@ -140,73 +122,56 @@ def hero(t):
 <circle cx="530" cy="64" r="4.5" fill="#ff5f57"/><circle cx="545" cy="64" r="4.5" fill="#febc2e"/><circle cx="560" cy="64" r="4.5" fill="#28c840"/>
 <text x="824" y="68" text-anchor="end" font-family="{MONO}" font-size="11" fill="{t["faint"]}">~/yovinchen</text>
 {"".join(term)}'''
-    return svg(w, h, body, "yovinchen, Big Data Engineer building AI developer tools")
-
-
-
-
-
-
-def stats(t, data):
-    w, h = 880, 120
-    items = [
-        (f'{data["contributions"]:,}', "contributions this year"),
-        (f'{data["commits"]:,}', "commits this year"),
-        (f'{data["merged_prs"]:,}', "merged pull requests"),
-        (f'{data["repositories"]:,}', "repositories"),
-        (f'{data["followers"]:,}', "followers"),
-    ]
-    step = w / len(items)
-    parts = [f'<rect x="0.5" y="0.5" width="{w - 1}" height="{h - 1}" rx="14" fill="{t["card"]}" stroke="{t["border"]}"/>']
-    for i, (value, label) in enumerate(items):
-        x = 32 + i * step
-        if i:
-            parts.append(f'<line x1="{i * step}" y1="30" x2="{i * step}" y2="{h - 30}" stroke="{t["border"]}"/>')
-        parts.append(f'<text x="{x}" y="66" font-family="{FONT}" font-size="32" font-weight="700" letter-spacing="-1" fill="{t["text"]}">{value}</text>'
-                     f'<text x="{x}" y="90" font-family="{FONT}" font-size="12" fill="{t["muted"]}">{label}</text>')
-    label = ", ".join(f"{v} {l}" for v, l in items)
-    return svg(w, h, "\n".join(parts), label)
+    return body
 
 
 def skills(t, data):
-    w, h = 880, 300
-    parts = [f'<rect x="0.5" y="0.5" width="{w - 1}" height="{h - 1}" rx="14" fill="{t["card"]}" stroke="{t["border"]}"/>',
+    w = 880
+    parts = [f'<line x1="32" y1="0" x2="{w - 56}" y2="0" stroke="{t["border"]}"/>',
              f'<text x="32" y="44" font-family="{MONO}" font-size="11" letter-spacing="1" fill="{t["accent"]}">WHAT I WORK ON</text>']
     for i, (title, items) in enumerate(DIRECTIONS):
         x, y = 32 + (i % 2) * 420, 78 + (i // 2) * 62
         parts.append(f'<text x="{x}" y="{y}" font-family="{FONT}" font-size="15" font-weight="700" fill="{t["text"]}">{title}</text>')
         parts.append(f'<text x="{x}" y="{y + 22}" font-family="{FONT}" font-size="13" fill="{t["muted"]}">{escape(" · ".join(items))}</text>')
 
-    parts.append(f'<line x1="32" y1="200" x2="{w - 32}" y2="200" stroke="{t["border"]}"/>')
+    parts.append(f'<line x1="32" y1="200" x2="{w - 56}" y2="200" stroke="{t["border"]}"/>')
     parts.append(f'<text x="32" y="228" font-family="{MONO}" font-size="11" letter-spacing="1" fill="{t["accent"]}">LANGUAGES</text>')
-    parts.append(f'<text x="{w - 32}" y="228" text-anchor="end" font-family="{FONT}" font-size="11" fill="{t["faint"]}">by code size across my repositories</text>')
-    x, bar_w = 32, w - 64
+    parts.append(f'<text x="{w - 56}" y="228" text-anchor="end" font-family="{FONT}" font-size="11" fill="{t["muted"]}">by code size across my repositories</text>')
+    x, bar_w = 32, w - 88
     parts.append(f'<clipPath id="bar"><rect x="32" y="242" width="{bar_w}" height="8" rx="4"/></clipPath><g clip-path="url(#bar)">')
+    colors = dict(zip((name for name, _ in data["languages"]), t["ramp"]))
+    colors["Other"] = t["ramp"][-1]
     for name, pct in data["languages"]:
         seg = bar_w * pct / 100
-        parts.append(f'<rect x="{x:.1f}" y="242" width="{seg + 0.5:.1f}" height="8" fill="{LANG_COLORS.get(name, LANG_COLORS["Other"])}"/>')
+        parts.append(f'<rect x="{x:.1f}" y="242" width="{seg + 0.5:.1f}" height="8" fill="{colors[name]}"/>')
         x += seg
     parts.append("</g>")
     x = 32
     for name, pct in data["languages"]:
-        color = LANG_COLORS.get(name, LANG_COLORS["Other"])
+        color = colors[name]
         text = f"{name} {pct:g}%"
         parts.append(f'<circle cx="{x + 4}" cy="273" r="4" fill="{color}"/>'
                      f'<text x="{x + 13}" y="277" font-family="{FONT}" font-size="12" fill="{t["muted"]}">{escape(text)}</text>')
         x += len(text) * 6.6 + 30
-    label = "Big Data, Backend, AI Tooling, Apps. Languages: " + ", ".join(f"{n} {p}%" for n, p in data["languages"])
-    return svg(w, h, "\n".join(parts), label)
+    return "\n".join(parts)
+
+
+def profile(t, data):
+    w, h = 880, 580
+    label = ("yovinchen, Big Data Engineer building AI developer tools. Works on Big Data, Backend, "
+             "AI Tooling and Apps. Languages: " + ", ".join(f"{n} {p}%" for n, p in data["languages"]))
+    body = (f'<rect x="0.5" y="0.5" width="{w - 1}" height="{h - 1}" rx="16" fill="{t["bg"]}" stroke="{t["border"]}"/>\n'
+            f'{hero(t)}\n<g transform="translate(12 268)">{skills(t, data)}</g>')
+    return svg(w, h, body, label)
 
 
 def main():
     data = load_data()
     ASSETS.mkdir(exist_ok=True)
-    for stale in [*ASSETS.glob("stack-*.svg"), *ASSETS.glob("project-*.svg"), *ASSETS.glob("contrib-*.svg")]:
+    for stale in ASSETS.glob("*.svg"):
         stale.unlink()
     for mode, t in THEMES.items():
-        (ASSETS / f"hero-{mode}.svg").write_text(hero(t))
-        (ASSETS / f"stats-{mode}.svg").write_text(stats(t, data))
-        (ASSETS / f"skills-{mode}.svg").write_text(skills(t, data))
+        (ASSETS / f"profile-{mode}.svg").write_text(profile(t, data))
 
 
 if __name__ == "__main__":
