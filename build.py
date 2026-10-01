@@ -9,7 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).parent
 ASSETS = ROOT / "assets"
 DATA_CACHE = ROOT / "data.json"
-USERNAME = "yovinchen"
+USERNAME = "Owlbay"
 TOKEN = os.environ.get("PROFILE_TOKEN") or os.environ.get("GITHUB_TOKEN")
 NON_CODE = {"CSS", "SCSS", "HTML", "PLpgSQL", "Shell", "Dockerfile", "Makefile"}
 LANG_COLORS = {"TypeScript": "#3178c6", "JavaScript": "#f1e05a", "Java": "#b07219", "Vue": "#41b883",
@@ -49,7 +49,7 @@ def fetch_data():
     request = urllib.request.Request(
         "https://api.github.com/graphql",
         data=json.dumps({"query": QUERY, "variables": {"login": USERNAME}}).encode(),
-        headers={"Authorization": f"Bearer {TOKEN}", "User-Agent": "yovinchen-profile"},
+        headers={"Authorization": f"Bearer {TOKEN}", "User-Agent": "owlbay-profile"},
     )
     with urllib.request.urlopen(request, timeout=30) as response:
         user = json.load(response)["data"]["user"]
