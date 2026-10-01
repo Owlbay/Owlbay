@@ -1,41 +1,41 @@
 {
-  "contributions": 3292,
-  "commits": 2254,
-  "merged_prs": 129,
-  "repositories": 7,
+  "contributions": 3312,
+  "commits": 2262,
+  "merged_prs": 130,
+  "repositories": 35,
   "followers": 45,
   "languages": [
     [
       "TypeScript",
-      64.2
+      44.6
     ],
     [
       "JavaScript",
-      19.9
+      12.5
+    ],
+    [
+      "Java",
+      11.5
+    ],
+    [
+      "Vue",
+      6.4
+    ],
+    [
+      "Go",
+      3.0
     ],
     [
       "Rust",
-      12.7
-    ],
-    [
-      "Kotlin",
-      1.4
+      2.9
     ],
     [
       "Python",
-      0.1
-    ],
-    [
-      "C#",
-      0.1
-    ],
-    [
-      "PowerShell",
-      0.0
+      1.4
     ],
     [
       "Other",
-      1.6
+      17.7
     ]
   ]
 }

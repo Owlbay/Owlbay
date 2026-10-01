@@ -60,7 +60,8 @@ def fetch_data():
             name = edge["node"]["name"]
             sizes["Other" if name in NON_CODE else name] += edge["size"]
     total = sum(sizes.values()) or 1
-    top = [(name, size) for name, size in sizes.most_common() if name != "Other"][:7]
+    top = [(name, size) for name, size in sizes.most_common()
+           if name != "Other" and size / total >= 0.005][:7]
     other = total - sum(size for _, size in top)
     languages = [(name, round(size / total * 100, 1)) for name, size in top]
     languages.append(("Other", round(other / total * 100, 1)))
