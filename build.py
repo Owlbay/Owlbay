@@ -131,16 +131,16 @@ def hero(t):
 <rect x="0.5" y="0.5" width="{w - 1}" height="{h - 1}" rx="16" fill="{t["bg"]}" stroke="{t["border"]}"/>
 <rect x="1" y="1" width="{w - 2}" height="{h - 2}" rx="16" fill="url(#dots)" opacity="0.6"/>
 <text x="44" y="70" font-family="{MONO}" font-size="13" fill="{t["muted"]}">hi there, I'm</text>
-<text x="42" y="122" font-family="{FONT}" font-size="50" font-weight="700" letter-spacing="-1.5" fill="{t["text"]}">yovinchen</text>
+<text x="42" y="122" font-family="{FONT}" font-size="50" font-weight="700" letter-spacing="-1.5" fill="{t["text"]}">Owlbay</text>
 <rect x="44" y="140" width="64" height="3" rx="1.5" fill="url(#g)"/>
 <text x="44" y="178" font-family="{FONT}" font-size="18" font-weight="600" fill="{t["text"]}">Big Data Engineer <tspan fill="url(#g)">→ AI Developer Tooling</tspan></text>
 <text x="44" y="206" font-family="{FONT}" font-size="14" fill="{t["muted"]}">Building data platforms by day, agent tools by night.</text>
 {chips(44, 228, ["Java", "Python", "Go", "Rust", "TypeScript"], t)}
 <rect x="510" y="44" width="330" height="192" rx="12" fill="{t["card"]}" stroke="{t["border"]}"/>
 <circle cx="530" cy="64" r="4.5" fill="#ff5f57"/><circle cx="545" cy="64" r="4.5" fill="#febc2e"/><circle cx="560" cy="64" r="4.5" fill="#28c840"/>
-<text x="824" y="68" text-anchor="end" font-family="{MONO}" font-size="11" fill="{t["faint"]}">~/yovinchen</text>
+<text x="824" y="68" text-anchor="end" font-family="{MONO}" font-size="11" fill="{t["faint"]}">~/owlbay</text>
 {"".join(term)}'''
-    return svg(w, h, body, "yovinchen, Big Data Engineer building AI developer tools")
+    return svg(w, h, body, "Owlbay, Big Data Engineer building AI developer tools")
 
 
 
