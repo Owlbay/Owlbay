@@ -1,41 +1,40 @@
 {
-  "contributions": 6478,
-  "commits": 4752,
+  "generated": "2026-10-04",
+  "joined": "2020-12",
+  "contributions": 6479,
+  "commits": 4753,
   "merged_prs": 359,
   "repositories": 41,
   "followers": 46,
+  "code": {
+    "repos": 13,
+    "commits": 3869,
+    "lines": 1753817
+  },
   "languages": [
     [
       "TypeScript",
-      50.0
-    ],
-    [
-      "JavaScript",
-      11.6
-    ],
-    [
-      "Java",
-      9.8
-    ],
-    [
-      "Vue",
-      5.4
+      54.8
     ],
     [
       "Rust",
-      3.0
+      23.2
+    ],
+    [
+      "JavaScript",
+      13.5
     ],
     [
       "Go",
-      2.5
+      5.2
     ],
     [
-      "Swift",
-      1.4
+      "Kotlin",
+      0.6
     ],
     [
       "Other",
-      16.3
+      2.6
     ]
   ]
 }
