@@ -11,6 +11,11 @@ on:
 permissions:
   contents: write
 
+# One run at a time so two refreshes never race on the push
+concurrency:
+  group: refresh
+  cancel-in-progress: false
+
 jobs:
   refresh:
     runs-on: ubuntu-latest

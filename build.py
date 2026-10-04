@@ -91,8 +91,25 @@ def graphql(query, variables):
     return body["data"]
 
 
+def accessible_repos():
+    """Repositories the token can read (own, collaborator, org member), private included.
+    Contribution queries hide private repositories from fine-grained tokens, so both lists are merged."""
+    repos, page = set(), 1
+    while True:
+        request = urllib.request.Request(
+            f"https://api.github.com/user/repos?affiliation=owner,collaborator,organization_member&per_page=100&page={page}",
+            headers={"Authorization": f"Bearer {TOKEN}", "User-Agent": "owlbay-profile"},
+        )
+        with urllib.request.urlopen(request, timeout=30) as response:
+            batch = json.load(response)
+        repos.update(r["full_name"] for r in batch if not r["fork"])
+        if len(batch) < 100:
+            return repos
+        page += 1
+
+
 def contributed_repos(since_year):
-    repos = set()
+    repos = accessible_repos()
     for year in range(since_year, dt.date.today().year + 1):
         data = graphql(REPOS_QUERY, {"from": f"{year}-01-01T00:00:00Z", "to": f"{year}-12-31T23:59:59Z"})
         for item in data["viewer"]["contributionsCollection"]["commitContributionsByRepository"]:
