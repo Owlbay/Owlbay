@@ -11,7 +11,7 @@
 <text x="452" y="162" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#64748b">React · Vue · Kotlin · Jetpack Compose</text>
 <line x1="32" y1="200" x2="848" y2="200" stroke="#e2e8f0"/>
 <text x="32" y="228" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11" letter-spacing="1" fill="#0369a1">LANGUAGES</text>
-<text x="848" y="228" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#cbd5e1">by lines I wrote: 5,363 commits across 47 repositories</text>
+<text x="848" y="228" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#cbd5e1">by lines I wrote: 5,364 commits across 43 repositories</text>
 <clipPath id="bar"><rect x="32" y="242" width="816" height="8" rx="4"/></clipPath><g clip-path="url(#bar)">
 <rect x="32.0" y="242" width="437.9" height="8" fill="#3178c6"/>
 <rect x="469.4" y="242" width="116.4" height="8" fill="#dea584"/>
