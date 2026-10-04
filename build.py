@@ -1,6 +1,16 @@
-"""Generate the profile SVG assets in light and dark variants."""
+"""Generate the profile SVG assets in light and dark variants.
+
+Languages are measured by the code I wrote: every repository with my commits (own, org and upstream,
+private included when PROFILE_TOKEN can read them) is cloned, and the lines added by my non-merge
+commits on the default branch are counted by file extension. Only aggregates are written or logged.
+"""
+import base64
+import datetime as dt
 import json
 import os
+import re
+import subprocess
+import tempfile
 import urllib.request
 from collections import Counter
 from html import escape
@@ -11,7 +21,29 @@ ASSETS = ROOT / "assets"
 DATA_CACHE = ROOT / "data.json"
 USERNAME = "Owlbay"
 TOKEN = os.environ.get("PROFILE_TOKEN") or os.environ.get("GITHUB_TOKEN")
-NON_CODE = {"CSS", "SCSS", "HTML", "PLpgSQL", "Shell", "Dockerfile", "Makefile"}
+MY_EMAILS = {
+    "gzh298255@gmail.com",
+    "76760071+yovinchen@users.noreply.github.com",
+    "76760071+owlbay@users.noreply.github.com",
+    "2982554722@qq.com",
+}
+# Extension -> language; markup, styles and scripts count as Other, docs and data files are ignored
+EXT_LANG = {
+    "ts": "TypeScript", "tsx": "TypeScript", "mts": "TypeScript", "cts": "TypeScript",
+    "js": "JavaScript", "jsx": "JavaScript", "mjs": "JavaScript", "cjs": "JavaScript",
+    "java": "Java", "kt": "Kotlin", "kts": "Kotlin", "scala": "Scala", "groovy": "Groovy",
+    "vue": "Vue", "svelte": "Svelte", "astro": "Astro",
+    "go": "Go", "rs": "Rust", "py": "Python", "swift": "Swift", "m": "Objective-C",
+    "c": "C", "h": "C", "cpp": "C++", "cc": "C++", "hpp": "C++", "cs": "C#", "php": "PHP", "rb": "Ruby", "dart": "Dart",
+    "sql": "SQL", "lua": "Lua",
+    "css": "Other", "scss": "Other", "less": "Other", "html": "Other", "htm": "Other",
+    "sh": "Other", "bash": "Other", "zsh": "Other", "ps1": "Other", "bat": "Other",
+}
+SKIP_PATH = re.compile(
+    r"(^|/)(node_modules|dist|build|out|target|vendor|\.next|\.nuxt|coverage|__snapshots__|generated|gen)/"
+    r"|\.min\.(js|css)$|(^|/)(package-lock\.json|pnpm-lock\.yaml|yarn\.lock|Cargo\.lock|go\.sum)$"
+    r"|\.(d\.ts|map)$"
+)
 LANG_COLORS = {"TypeScript": "#3178c6", "JavaScript": "#f1e05a", "Java": "#b07219", "Vue": "#41b883",
                "Go": "#00add8", "Rust": "#dea584", "Python": "#3572a5", "Kotlin": "#a97bff", "Other": "#8b97a8"}
 
@@ -23,14 +55,15 @@ DIRECTIONS = [
 ]
 
 QUERY = """query($login: String!) { user(login: $login) {
+  createdAt
   followers { totalCount }
   pullRequests(states: MERGED) { totalCount }
-  repositories(ownerAffiliations: OWNER, isFork: false, first: 100) {
-    totalCount
-    nodes { languages(first: 10, orderBy: {field: SIZE, direction: DESC}) { edges { size node { name } } } }
-  }
+  repositories(ownerAffiliations: OWNER, isFork: false, first: 100) { totalCount }
   contributionsCollection { totalCommitContributions contributionCalendar { totalContributions } }
 } }"""
+REPOS_QUERY = """query($from: DateTime!, $to: DateTime!) { viewer { contributionsCollection(from: $from, to: $to) {
+  commitContributionsByRepository(maxRepositories: 100) { repository { nameWithOwner } }
+} } }"""
 FONT = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
 MONO = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace"
 
@@ -45,21 +78,78 @@ THEMES = {
 
 
 
-def fetch_data():
+def graphql(query, variables):
     request = urllib.request.Request(
         "https://api.github.com/graphql",
-        data=json.dumps({"query": QUERY, "variables": {"login": USERNAME}}).encode(),
+        data=json.dumps({"query": query, "variables": variables}).encode(),
         headers={"Authorization": f"Bearer {TOKEN}", "User-Agent": "owlbay-profile"},
     )
     with urllib.request.urlopen(request, timeout=30) as response:
-        user = json.load(response)["data"]["user"]
+        body = json.load(response)
+    if body.get("errors"):
+        raise RuntimeError(body["errors"][0].get("message", "GraphQL error"))
+    return body["data"]
 
-    sizes = Counter()
-    for repo in user["repositories"]["nodes"]:
-        for edge in repo["languages"]["edges"]:
-            name = edge["node"]["name"]
-            sizes["Other" if name in NON_CODE else name] += edge["size"]
-    total = sum(sizes.values()) or 1
+
+def contributed_repos(since_year):
+    repos = set()
+    for year in range(since_year, dt.date.today().year + 1):
+        data = graphql(REPOS_QUERY, {"from": f"{year}-01-01T00:00:00Z", "to": f"{year}-12-31T23:59:59Z"})
+        for item in data["viewer"]["contributionsCollection"]["commitContributionsByRepository"]:
+            repos.add(item["repository"]["nameWithOwner"])
+    return sorted(repos)
+
+
+def lang_of(path):
+    if SKIP_PATH.search(path):
+        return None
+    base = path.rsplit("/", 1)[-1]
+    return EXT_LANG.get(base.rsplit(".", 1)[-1].lower()) if "." in base else None
+
+
+def scan_code(repos):
+    """Lines added by my non-merge commits on each default branch. Repository names are never logged."""
+    auth = base64.b64encode(f"x-access-token:{TOKEN}".encode()).decode()
+    env = {**os.environ, "GIT_TERMINAL_PROMPT": "0"}
+    sizes, commits, scanned = Counter(), 0, 0
+    with tempfile.TemporaryDirectory() as tmp:
+        for i, repo in enumerate(repos):
+            target = os.path.join(tmp, str(i))
+            cloned = subprocess.run(
+                ["git", "-c", f"http.extraHeader=Authorization: Basic {auth}", "clone", "-q", "--bare",
+                 "--single-branch", f"https://github.com/{repo}.git", target],
+                capture_output=True, env=env,
+            )
+            if cloned.returncode:
+                continue
+            log = subprocess.run(
+                ["git", "-C", target, "log", "HEAD", "--no-merges", "--no-renames", "--format=@@%ae", "--numstat"],
+                capture_output=True, text=True, errors="replace",
+            ).stdout
+            mine = False
+            for line in log.split("\n"):
+                if line.startswith("@@"):
+                    mine = line[2:].lower() in MY_EMAILS
+                    commits += mine
+                elif line and mine:
+                    added, _deleted, path = line.split("\t", 2)
+                    lang = lang_of(path) if added != "-" else None
+                    if lang:
+                        sizes[lang] += int(added)
+            scanned += 1
+            subprocess.run(["rm", "-rf", target])
+    return sizes, commits, scanned
+
+
+def fetch_data():
+    user = graphql(QUERY, {"login": USERNAME})["user"]
+    repos = contributed_repos(int(user["createdAt"][:4]))
+    sizes, commits, scanned = scan_code(repos)
+    if not sizes:
+        raise RuntimeError("no code scanned")
+    print(f"scanned {scanned}/{len(repos)} repositories, {commits} commits, {sum(sizes.values())} lines")
+
+    total = sum(sizes.values())
     top = [(name, size) for name, size in sizes.most_common()
            if name != "Other" and size / total >= 0.005][:7]
     other = total - sum(size for _, size in top)
@@ -68,11 +158,14 @@ def fetch_data():
 
     calendar = user["contributionsCollection"]
     return {
+        "generated": dt.date.today().isoformat(),
+        "joined": user["createdAt"][:7],
         "contributions": calendar["contributionCalendar"]["totalContributions"],
         "commits": calendar["totalCommitContributions"],
         "merged_prs": user["pullRequests"]["totalCount"],
         "repositories": user["repositories"]["totalCount"],
         "followers": user["followers"]["totalCount"],
+        "code": {"repos": scanned, "commits": commits, "lines": total},
         "languages": languages,
     }
 
@@ -149,6 +242,13 @@ def hero(t):
 
 
 
+def languages_note(data):
+    code = data.get("code")
+    if not code:
+        return "by code size across my repositories"
+    return f"by lines I wrote: {code['commits']:,} commits across {code['repos']} repositories"
+
+
 def skills(t, data):
     w, h = 880, 300
     parts = [f'<rect x="0.5" y="0.5" width="{w - 1}" height="{h - 1}" rx="14" fill="{t["card"]}" stroke="{t["border"]}"/>',
@@ -160,7 +260,7 @@ def skills(t, data):
 
     parts.append(f'<line x1="32" y1="200" x2="{w - 32}" y2="200" stroke="{t["border"]}"/>')
     parts.append(f'<text x="32" y="228" font-family="{MONO}" font-size="11" letter-spacing="1" fill="{t["accent"]}">LANGUAGES</text>')
-    parts.append(f'<text x="{w - 32}" y="228" text-anchor="end" font-family="{FONT}" font-size="11" fill="{t["faint"]}">by code size across my repositories</text>')
+    parts.append(f'<text x="{w - 32}" y="228" text-anchor="end" font-family="{FONT}" font-size="11" fill="{t["faint"]}">{escape(languages_note(data))}</text>')
     x, bar_w = 32, w - 64
     parts.append(f'<clipPath id="bar"><rect x="32" y="242" width="{bar_w}" height="8" rx="4"/></clipPath><g clip-path="url(#bar)">')
     for name, pct in data["languages"]:

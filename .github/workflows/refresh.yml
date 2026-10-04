@@ -14,13 +14,15 @@ permissions:
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      # PROFILE_TOKEN is a read-only PAT so the cards include private contributions and
-      # languages. Without it the build keeps the cached data instead of shrinking the numbers.
+      # PROFILE_TOKEN is a read-only PAT: build.py clones every repository with my commits (private,
+      # org and upstream) to count the lines I wrote. Only aggregate numbers are logged or committed.
+      # Without it the build keeps the cached data instead of shrinking the numbers.
       - run: python build.py
         env:
           PROFILE_TOKEN: ${{ secrets.PROFILE_TOKEN }}
