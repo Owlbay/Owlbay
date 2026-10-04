@@ -143,17 +143,18 @@ def scan_code(repos):
                 ["git", "-C", target, "log", "HEAD", "--no-merges", "--no-renames", "--format=@@%ae", "--numstat"],
                 capture_output=True, text=True, errors="replace",
             ).stdout
-            mine = False
+            mine, mine_here = False, 0
             for line in log.split("\n"):
                 if line.startswith("@@"):
                     mine = line[2:].lower() in MY_EMAILS
-                    commits += mine
+                    mine_here += mine
                 elif line and mine:
                     added, _deleted, path = line.split("\t", 2)
                     lang = lang_of(path) if added != "-" else None
                     if lang:
                         sizes[lang] += int(added)
-            scanned += 1
+            commits += mine_here
+            scanned += mine_here > 0  # count only repositories that contain my commits
             subprocess.run(["rm", "-rf", target])
     return sizes, commits, scanned
 
@@ -164,7 +165,7 @@ def fetch_data():
     sizes, commits, scanned = scan_code(repos)
     if not sizes:
         raise RuntimeError("no code scanned")
-    print(f"scanned {scanned}/{len(repos)} repositories, {commits} commits, {sum(sizes.values())} lines")
+    print(f"checked {len(repos)} repositories; mine in {scanned}: {commits} commits, {sum(sizes.values())} lines")
 
     total = sum(sizes.values())
     top = [(name, size) for name, size in sizes.most_common()
