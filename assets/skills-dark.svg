@@ -1,33 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="880" height="300" viewBox="0 0 880 300" role="img" aria-label="Big Data, Backend, AI Tooling, Apps. Languages: TypeScript 53.6%, Rust 14.2%, JavaScript 10.3%, Java 6.6%, Vue 4.9%, Go 3.5%, Python 1.5%, Other 5.3%">
-<rect x="0.5" y="0.5" width="879" height="299" rx="14" fill="#11161f" stroke="#222b38"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="357" viewBox="0 0 880 357" role="img" aria-label="AI coding tools: TypeScript · Rust · Swift · Electron · Tauri, Data &amp; database tools: Rust · JavaScript, LLM gateways &amp; AI apps: Go · TypeScript · Python, Java backend: Java · Spring Boot · Vue, Dev environment &amp; tooling: Rust · TypeScript · Tauri · Shell. Languages: TypeScript 53.7%, Rust 14.2%, JavaScript 10.3%, Java 6.6%, Vue 4.9%, Go 3.5%, Python 1.5%, Other 5.3%">
+<rect x="0.5" y="0.5" width="879" height="356" rx="14" fill="#11161f" stroke="#222b38"/>
 <text x="32" y="44" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11" letter-spacing="1" fill="#7dd3fc">WHAT I WORK ON</text>
-<text x="32" y="78" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#e6edf3">Big Data</text>
-<text x="32" y="100" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#8b97a8">Cassandra · Kafka · Redis · MySQL · Data pipelines</text>
-<text x="452" y="78" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#e6edf3">Backend</text>
-<text x="452" y="100" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#8b97a8">Java · Spring Boot · Spring Cloud · Go</text>
-<text x="32" y="140" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#e6edf3">AI Tooling</text>
-<text x="32" y="162" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#8b97a8">TypeScript · Rust · Coding agents · LLM gateways</text>
-<text x="452" y="140" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#e6edf3">Apps</text>
-<text x="452" y="162" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#8b97a8">React · Vue · Kotlin · Jetpack Compose</text>
-<line x1="32" y1="200" x2="848" y2="200" stroke="#222b38"/>
-<text x="32" y="228" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11" letter-spacing="1" fill="#7dd3fc">LANGUAGES</text>
-<text x="848" y="228" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#4b5566">by lines I wrote: 5,364 commits across 43 repositories</text>
-<clipPath id="bar"><rect x="32" y="242" width="816" height="8" rx="4"/></clipPath><g clip-path="url(#bar)">
-<rect x="32.0" y="242" width="437.9" height="8" fill="#3178c6"/>
-<rect x="469.4" y="242" width="116.4" height="8" fill="#dea584"/>
-<rect x="585.2" y="242" width="84.5" height="8" fill="#f1e05a"/>
-<rect x="669.3" y="242" width="54.4" height="8" fill="#b07219"/>
-<rect x="723.2" y="242" width="40.5" height="8" fill="#41b883"/>
-<rect x="763.1" y="242" width="29.1" height="8" fill="#00add8"/>
-<rect x="791.7" y="242" width="12.7" height="8" fill="#3572a5"/>
-<rect x="803.9" y="242" width="43.7" height="8" fill="#8b97a8"/>
+<text x="32" y="76" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#8b97a8">AI coding tools</text>
+<text x="236" y="76" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#e6edf3">TypeScript · Rust · Swift · Electron · Tauri</text>
+<text x="848" y="76" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#8b97a8">Armadra · ama · cc-switch · LiveAgent</text>
+<text x="32" y="110" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#8b97a8">Data &amp; database tools</text>
+<text x="236" y="110" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#e6edf3">Rust · JavaScript</text>
+<text x="32" y="144" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#8b97a8">LLM gateways &amp; AI apps</text>
+<text x="236" y="144" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#e6edf3">Go · TypeScript · Python</text>
+<text x="32" y="178" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#8b97a8">Java backend</text>
+<text x="236" y="178" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#e6edf3">Java · Spring Boot · Vue</text>
+<text x="32" y="212" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#8b97a8">Dev environment &amp; tooling</text>
+<text x="236" y="212" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#e6edf3">Rust · TypeScript · Tauri · Shell</text>
+<line x1="32" y1="252" x2="848" y2="252" stroke="#222b38"/>
+<text x="32" y="284" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11" letter-spacing="1" fill="#7dd3fc">LANGUAGES</text>
+<clipPath id="bar"><rect x="32" y="300" width="816" height="8" rx="4"/></clipPath><g clip-path="url(#bar)">
+<rect x="32.0" y="300" width="438.7" height="8" fill="#3178c6"/>
+<rect x="470.2" y="300" width="116.4" height="8" fill="#dea584"/>
+<rect x="586.1" y="300" width="84.5" height="8" fill="#f1e05a"/>
+<rect x="670.1" y="300" width="54.4" height="8" fill="#b07219"/>
+<rect x="724.0" y="300" width="40.5" height="8" fill="#41b883"/>
+<rect x="764.0" y="300" width="29.1" height="8" fill="#00add8"/>
+<rect x="792.5" y="300" width="12.7" height="8" fill="#3572a5"/>
+<rect x="804.8" y="300" width="43.7" height="8" fill="#8b97a8"/>
 </g>
-<circle cx="36" cy="273" r="4" fill="#3178c6"/><text x="45" y="277" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#8b97a8">TypeScript 53.6%</text>
-<circle cx="171.6" cy="273" r="4" fill="#dea584"/><text x="180.6" y="277" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#8b97a8">Rust 14.2%</text>
-<circle cx="267.6" cy="273" r="4" fill="#f1e05a"/><text x="276.6" y="277" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#8b97a8">JavaScript 10.3%</text>
-<circle cx="403.20000000000005" cy="273" r="4" fill="#b07219"/><text x="412.20000000000005" y="277" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#8b97a8">Java 6.6%</text>
-<circle cx="492.6" cy="273" r="4" fill="#41b883"/><text x="501.6" y="277" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#8b97a8">Vue 4.9%</text>
-<circle cx="575.4" cy="273" r="4" fill="#00add8"/><text x="584.4" y="277" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#8b97a8">Go 3.5%</text>
-<circle cx="651.5999999999999" cy="273" r="4" fill="#3572a5"/><text x="660.5999999999999" y="277" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#8b97a8">Python 1.5%</text>
-<circle cx="754.1999999999999" cy="273" r="4" fill="#8b97a8"/><text x="763.1999999999999" y="277" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#8b97a8">Other 5.3%</text>
+<circle cx="36" cy="327" r="4" fill="#3178c6"/><text x="45" y="331" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#8b97a8">TypeScript 53.7%</text>
+<circle cx="171.6" cy="327" r="4" fill="#dea584"/><text x="180.6" y="331" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#8b97a8">Rust 14.2%</text>
+<circle cx="267.6" cy="327" r="4" fill="#f1e05a"/><text x="276.6" y="331" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#8b97a8">JavaScript 10.3%</text>
+<circle cx="403.20000000000005" cy="327" r="4" fill="#b07219"/><text x="412.20000000000005" y="331" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#8b97a8">Java 6.6%</text>
+<circle cx="492.6" cy="327" r="4" fill="#41b883"/><text x="501.6" y="331" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#8b97a8">Vue 4.9%</text>
+<circle cx="575.4" cy="327" r="4" fill="#00add8"/><text x="584.4" y="331" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#8b97a8">Go 3.5%</text>
+<circle cx="651.5999999999999" cy="327" r="4" fill="#3572a5"/><text x="660.5999999999999" y="331" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#8b97a8">Python 1.5%</text>
+<circle cx="754.1999999999999" cy="327" r="4" fill="#8b97a8"/><text x="763.1999999999999" y="331" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#8b97a8">Other 5.3%</text>
 </svg>

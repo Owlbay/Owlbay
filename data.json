@@ -1,20 +1,20 @@
 {
-  "generated": "2026-10-04",
+  "generated": "2026-10-05",
   "joined": "2020-12",
-  "contributions": 6481,
-  "commits": 4755,
-  "merged_prs": 359,
+  "contributions": 6547,
+  "commits": 4808,
+  "merged_prs": 368,
   "repositories": 41,
   "followers": 46,
   "code": {
     "repos": 43,
-    "commits": 5364,
-    "lines": 2952967
+    "commits": 5409,
+    "lines": 2959356
   },
   "languages": [
     [
       "TypeScript",
-      53.6
+      53.7
     ],
     [
       "Rust",
