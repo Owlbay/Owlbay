@@ -44,17 +44,12 @@ SKIP_PATH = re.compile(
     r"|\.min\.(js|css)$|(^|/)(package-lock\.json|pnpm-lock\.yaml|yarn\.lock|Cargo\.lock|go\.sum)$"
     r"|\.(d\.ts|map)$"
 )
-LANG_COLORS = {"TypeScript": "#3178c6", "JavaScript": "#f1e05a", "Java": "#b07219", "Vue": "#41b883",
-               "Go": "#00add8", "Rust": "#dea584", "Python": "#3572a5", "Kotlin": "#a97bff", "Other": "#8b97a8"}
 
-# What I work on: grouped from my commits over the last 12 months, technology first.
-# Projects are shown only for the AI coding tools row (public repositories).
 DIRECTIONS = [
-    ("AI coding tools", "TypeScript · Rust · Swift · Electron · Tauri", "Armadra · ama · cc-switch · LiveAgent"),
-    ("Data & database tools", "Rust · JavaScript", ""),
-    ("LLM gateways & AI apps", "Go · TypeScript · Python", ""),
-    ("Java backend", "Java · Spring Boot · Vue", ""),
-    ("Dev environment & tooling", "Rust · TypeScript · Tauri · Shell", ""),
+    ("Big Data", ["Cassandra", "Kafka", "Redis", "MySQL", "Data pipelines"]),
+    ("Backend", ["Java", "Spring Boot", "Spring Cloud", "Go"]),
+    ("AI Tooling", ["TypeScript", "Rust", "Coding agents", "LLM gateways"]),
+    ("Apps", ["React", "Vue", "Kotlin", "Jetpack Compose"]),
 ]
 
 QUERY = """query($login: String!) { user(login: $login) {
@@ -263,39 +258,15 @@ def hero(t):
 
 
 
-def skills(t, data):
-    w = 880
-    row_h, top = 34, 76
-    rule_y = top + row_h * len(DIRECTIONS) + 6
-    lang_y = rule_y + 32
-    bar_y, legend_y = lang_y + 16, lang_y + 47
-    h = legend_y + 26
+def skills(t):
+    w, h = 880, 196
     parts = [f'<rect x="0.5" y="0.5" width="{w - 1}" height="{h - 1}" rx="14" fill="{t["card"]}" stroke="{t["border"]}"/>',
              f'<text x="32" y="44" font-family="{MONO}" font-size="11" letter-spacing="1" fill="{t["accent"]}">WHAT I WORK ON</text>']
-    for i, (area, stack, projects) in enumerate(DIRECTIONS):
-        y = top + i * row_h
-        parts.append(f'<text x="32" y="{y}" font-family="{FONT}" font-size="13" fill="{t["muted"]}">{escape(area)}</text>')
-        parts.append(f'<text x="236" y="{y}" font-family="{FONT}" font-size="15" font-weight="600" fill="{t["text"]}">{escape(stack)}</text>')
-        if projects:
-            parts.append(f'<text x="{w - 32}" y="{y}" text-anchor="end" font-family="{FONT}" font-size="13" fill="{t["muted"]}">{escape(projects)}</text>')
-
-    parts.append(f'<line x1="32" y1="{rule_y}" x2="{w - 32}" y2="{rule_y}" stroke="{t["border"]}"/>')
-    parts.append(f'<text x="32" y="{lang_y}" font-family="{MONO}" font-size="11" letter-spacing="1" fill="{t["accent"]}">LANGUAGES</text>')
-    x, bar_w = 32, w - 64
-    parts.append(f'<clipPath id="bar"><rect x="32" y="{bar_y}" width="{bar_w}" height="8" rx="4"/></clipPath><g clip-path="url(#bar)">')
-    for name, pct in data["languages"]:
-        seg = bar_w * pct / 100
-        parts.append(f'<rect x="{x:.1f}" y="{bar_y}" width="{seg + 0.5:.1f}" height="8" fill="{LANG_COLORS.get(name, LANG_COLORS["Other"])}"/>')
-        x += seg
-    parts.append("</g>")
-    x = 32
-    for name, pct in data["languages"]:
-        color = LANG_COLORS.get(name, LANG_COLORS["Other"])
-        text = f"{name} {pct:g}%"
-        parts.append(f'<circle cx="{x + 4}" cy="{legend_y - 4}" r="4" fill="{color}"/>'
-                     f'<text x="{x + 13}" y="{legend_y}" font-family="{FONT}" font-size="12" fill="{t["muted"]}">{escape(text)}</text>')
-        x += len(text) * 6.6 + 30
-    label = ", ".join(f"{a}: {st}" for a, st, _ in DIRECTIONS) + ". Languages: " + ", ".join(f"{n} {p}%" for n, p in data["languages"])
+    for i, (title, items) in enumerate(DIRECTIONS):
+        x, y = 32 + (i % 2) * 420, 78 + (i // 2) * 62
+        parts.append(f'<text x="{x}" y="{y}" font-family="{FONT}" font-size="15" font-weight="700" fill="{t["text"]}">{title}</text>')
+        parts.append(f'<text x="{x}" y="{y + 22}" font-family="{FONT}" font-size="13" fill="{t["muted"]}">{escape(" · ".join(items))}</text>')
+    label = "What I work on: " + "; ".join(f"{title}: {', '.join(items)}" for title, items in DIRECTIONS)
     return svg(w, h, "\n".join(parts), label)
 
 
@@ -306,7 +277,7 @@ def main():
         stale.unlink()
     for mode, t in THEMES.items():
         (ASSETS / f"hero-{mode}.svg").write_text(hero(t))
-        (ASSETS / f"skills-{mode}.svg").write_text(skills(t, data))
+        (ASSETS / f"skills-{mode}.svg").write_text(skills(t))
 
 
 if __name__ == "__main__":
