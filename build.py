@@ -45,6 +45,9 @@ SKIP_PATH = re.compile(
     r"|\.(d\.ts|map)$"
 )
 
+LANG_COLORS = {"TypeScript": "#3178c6", "JavaScript": "#f1e05a", "Java": "#b07219", "Vue": "#41b883",
+               "Go": "#00add8", "Rust": "#dea584", "Python": "#3572a5", "Kotlin": "#a97bff", "Other": "#8b97a8"}
+
 DIRECTIONS = [
     ("Big Data", ["Cassandra", "Kafka", "Redis", "MySQL", "Data pipelines"]),
     ("Backend", ["Java", "Spring Boot", "Spring Cloud", "Go"]),
@@ -258,15 +261,32 @@ def hero(t):
 
 
 
-def skills(t):
-    w, h = 880, 196
+def skills(t, data):
+    w, h = 880, 300
     parts = [f'<rect x="0.5" y="0.5" width="{w - 1}" height="{h - 1}" rx="14" fill="{t["card"]}" stroke="{t["border"]}"/>',
              f'<text x="32" y="44" font-family="{MONO}" font-size="11" letter-spacing="1" fill="{t["accent"]}">WHAT I WORK ON</text>']
     for i, (title, items) in enumerate(DIRECTIONS):
         x, y = 32 + (i % 2) * 420, 78 + (i // 2) * 62
         parts.append(f'<text x="{x}" y="{y}" font-family="{FONT}" font-size="15" font-weight="700" fill="{t["text"]}">{title}</text>')
         parts.append(f'<text x="{x}" y="{y + 22}" font-family="{FONT}" font-size="13" fill="{t["muted"]}">{escape(" · ".join(items))}</text>')
-    label = "What I work on: " + "; ".join(f"{title}: {', '.join(items)}" for title, items in DIRECTIONS)
+
+    parts.append(f'<line x1="32" y1="200" x2="{w - 32}" y2="200" stroke="{t["border"]}"/>')
+    parts.append(f'<text x="32" y="228" font-family="{MONO}" font-size="11" letter-spacing="1" fill="{t["accent"]}">LANGUAGES</text>')
+    x, bar_w = 32, w - 64
+    parts.append(f'<clipPath id="bar"><rect x="32" y="242" width="{bar_w}" height="8" rx="4"/></clipPath><g clip-path="url(#bar)">')
+    for name, pct in data["languages"]:
+        seg = bar_w * pct / 100
+        parts.append(f'<rect x="{x:.1f}" y="242" width="{seg + 0.5:.1f}" height="8" fill="{LANG_COLORS.get(name, LANG_COLORS["Other"])}"/>')
+        x += seg
+    parts.append("</g>")
+    x = 32
+    for name, pct in data["languages"]:
+        color = LANG_COLORS.get(name, LANG_COLORS["Other"])
+        text = f"{name} {pct:g}%"
+        parts.append(f'<circle cx="{x + 4}" cy="273" r="4" fill="{color}"/>'
+                     f'<text x="{x + 13}" y="277" font-family="{FONT}" font-size="12" fill="{t["muted"]}">{escape(text)}</text>')
+        x += len(text) * 6.6 + 30
+    label = "Big Data, Backend, AI Tooling, Apps. Languages: " + ", ".join(f"{n} {p}%" for n, p in data["languages"])
     return svg(w, h, "\n".join(parts), label)
 
 
@@ -277,7 +297,7 @@ def main():
         stale.unlink()
     for mode, t in THEMES.items():
         (ASSETS / f"hero-{mode}.svg").write_text(hero(t))
-        (ASSETS / f"skills-{mode}.svg").write_text(skills(t))
+        (ASSETS / f"skills-{mode}.svg").write_text(skills(t, data))
 
 
 if __name__ == "__main__":
