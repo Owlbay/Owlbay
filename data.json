@@ -1,15 +1,15 @@
 {
-  "generated": "2026-10-29",
+  "generated": "2026-10-30",
   "joined": "2020-12",
-  "contributions": 3013,
+  "contributions": 3019,
   "commits": 1137,
-  "merged_prs": 928,
+  "merged_prs": 957,
   "repositories": 45,
   "followers": 51,
   "code": {
     "repos": 48,
-    "commits": 2545,
-    "lines": 2064296
+    "commits": 2548,
+    "lines": 2066164
   },
   "languages": [
     [
@@ -22,7 +22,7 @@
     ],
     [
       "JavaScript",
-      10.2
+      10.1
     ],
     [
       "Vue",
@@ -34,7 +34,7 @@
     ],
     [
       "Go",
-      4.3
+      4.4
     ],
     [
       "Python",
