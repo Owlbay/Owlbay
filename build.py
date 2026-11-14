@@ -48,13 +48,6 @@ SKIP_PATH = re.compile(
 LANG_COLORS = {"TypeScript": "#3178c6", "JavaScript": "#f1e05a", "Java": "#b07219", "Vue": "#41b883",
                "Go": "#00add8", "Rust": "#dea584", "Python": "#3572a5", "Kotlin": "#a97bff", "Other": "#8b97a8"}
 
-DIRECTIONS = [
-    ("Big Data", ["Cassandra", "Kafka", "Redis", "MySQL", "Data pipelines"]),
-    ("Backend", ["Java", "Spring Boot", "Spring Cloud", "Go"]),
-    ("AI Tooling", ["TypeScript", "Rust", "Coding agents", "LLM gateways"]),
-    ("Apps", ["React", "Vue", "Kotlin", "Jetpack Compose"]),
-]
-
 QUERY = """query($login: String!) { user(login: $login) {
   createdAt
   followers { totalCount }
@@ -205,88 +198,23 @@ def svg(width, height, body, label):
             f'viewBox="0 0 {width} {height}" role="img" aria-label="{escape(label)}">\n{body}\n</svg>\n')
 
 
-def chips(x, y, labels, t, size=11):
-    out, cx = [], x
-    for label in labels:
-        w = len(label) * size * 0.62 + 18
-        out.append(f'<rect x="{cx:.1f}" y="{y}" width="{w:.1f}" height="22" rx="11" fill="{t["chip"]}" stroke="{t["border"]}"/>'
-                   f'<text x="{cx + w / 2:.1f}" y="{y + 15}" text-anchor="middle" font-family="{MONO}" font-size="{size}" fill="{t["muted"]}">{escape(label)}</text>')
-        cx += w + 8
-    return "".join(out)
-
-
-def hero(t):
-    w, h = 880, 280
-    lines = [
-        ("$", "whoami", t["text"]),
-        ("", "big data engineer", t["muted"]),
-        ("$", "cat now.txt", t["text"]),
-        ("", "data pipelines, query tooling,", t["muted"]),
-        ("", "and AI tools for developers", t["muted"]),
-        ("$", "status", t["text"]),
-    ]
-    term = []
-    y = 98
-    for prompt, text, color in lines:
-        if prompt:
-            term.append(f'<text x="534" y="{y}" font-family="{MONO}" font-size="13" fill="{t["accent"]}">$</text>')
-            term.append(f'<text x="550" y="{y}" font-family="{MONO}" font-size="13" fill="{color}">{escape(text)}</text>')
-        else:
-            term.append(f'<text x="550" y="{y}" font-family="{MONO}" font-size="13" fill="{color}">{escape(text)}</text>')
-        y += 20
-    term.append(f'<text x="550" y="{y}" font-family="{MONO}" font-size="13" fill="{t["muted"]}">mostly debugging</text>'
-                f'<rect x="680" y="{y - 11}" width="8" height="14" fill="{t["accent"]}"><animate attributeName="opacity" values="1;0;1" dur="1.1s" repeatCount="indefinite"/></rect>')
-    body = f'''<defs>
-<linearGradient id="g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{t["accent"]}"/><stop offset="1" stop-color="{t["accent2"]}"/></linearGradient>
-<pattern id="dots" width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="{t["border"]}"/></pattern>
-</defs>
-<rect x="0.5" y="0.5" width="{w - 1}" height="{h - 1}" rx="16" fill="{t["bg"]}" stroke="{t["border"]}"/>
-<rect x="1" y="1" width="{w - 2}" height="{h - 2}" rx="16" fill="url(#dots)" opacity="0.6"/>
-<text x="44" y="70" font-family="{MONO}" font-size="13" fill="{t["muted"]}">hi there, I'm</text>
-<text x="42" y="122" font-family="{FONT}" font-size="50" font-weight="700" letter-spacing="-1.5" fill="{t["text"]}">Owlbay</text>
-<rect x="44" y="140" width="64" height="3" rx="1.5" fill="url(#g)"/>
-<text x="44" y="178" font-family="{FONT}" font-size="18" font-weight="600" fill="{t["text"]}">Big Data Engineer <tspan fill="url(#g)">→ AI Developer Tooling</tspan></text>
-<text x="44" y="206" font-family="{FONT}" font-size="14" fill="{t["muted"]}">Building data platforms by day, agent tools by night.</text>
-{chips(44, 228, ["Java", "Python", "Go", "Rust", "TypeScript"], t)}
-<rect x="510" y="44" width="330" height="192" rx="12" fill="{t["card"]}" stroke="{t["border"]}"/>
-<circle cx="530" cy="64" r="4.5" fill="#ff5f57"/><circle cx="545" cy="64" r="4.5" fill="#febc2e"/><circle cx="560" cy="64" r="4.5" fill="#28c840"/>
-<text x="824" y="68" text-anchor="end" font-family="{MONO}" font-size="11" fill="{t["faint"]}">~/owlbay</text>
-{"".join(term)}'''
-    return svg(w, h, body, "Owlbay, Big Data Engineer building AI developer tools")
-
-
-
-
-
-
-
-
 def skills(t, data):
-    w, h = 880, 300
-    parts = [f'<rect x="0.5" y="0.5" width="{w - 1}" height="{h - 1}" rx="14" fill="{t["card"]}" stroke="{t["border"]}"/>',
-             f'<text x="32" y="44" font-family="{MONO}" font-size="11" letter-spacing="1" fill="{t["accent"]}">WHAT I WORK ON</text>']
-    for i, (title, items) in enumerate(DIRECTIONS):
-        x, y = 32 + (i % 2) * 420, 78 + (i // 2) * 62
-        parts.append(f'<text x="{x}" y="{y}" font-family="{FONT}" font-size="15" font-weight="700" fill="{t["text"]}">{title}</text>')
-        parts.append(f'<text x="{x}" y="{y + 22}" font-family="{FONT}" font-size="13" fill="{t["muted"]}">{escape(" · ".join(items))}</text>')
-
-    parts.append(f'<line x1="32" y1="200" x2="{w - 32}" y2="200" stroke="{t["border"]}"/>')
-    parts.append(f'<text x="32" y="228" font-family="{MONO}" font-size="11" letter-spacing="1" fill="{t["accent"]}">LANGUAGES</text>')
-    x, bar_w = 32, w - 64
-    parts.append(f'<clipPath id="bar"><rect x="32" y="242" width="{bar_w}" height="8" rx="4"/></clipPath><g clip-path="url(#bar)">')
-    for name, pct in data["languages"]:
-        seg = bar_w * pct / 100
-        parts.append(f'<rect x="{x:.1f}" y="242" width="{seg + 0.5:.1f}" height="8" fill="{LANG_COLORS.get(name, LANG_COLORS["Other"])}"/>')
-        x += seg
-    parts.append("</g>")
-    x = 32
-    for name, pct in data["languages"]:
+    w, h = 640, 320
+    parts = [
+        f'<rect x="0.5" y="0.5" width="{w - 1}" height="{h - 1}" rx="8" fill="{t["bg"]}" stroke="{t["border"]}"/>',
+        f'<text x="28" y="38" font-family="{FONT}" font-size="18" font-weight="600" fill="{t["text"]}">Languages</text>',
+        f'<text x="{w - 28}" y="38" text-anchor="end" font-family="{MONO}" font-size="12" fill="{t["muted"]}">{escape(data["generated"])}</text>',
+    ]
+    for i, (name, pct) in enumerate(data["languages"]):
+        y = 72 + i * 29
         color = LANG_COLORS.get(name, LANG_COLORS["Other"])
-        text = f"{name} {pct:g}%"
-        parts.append(f'<circle cx="{x + 4}" cy="273" r="4" fill="{color}"/>'
-                     f'<text x="{x + 13}" y="277" font-family="{FONT}" font-size="12" fill="{t["muted"]}">{escape(text)}</text>')
-        x += len(text) * 6.6 + 30
-    label = "Big Data, Backend, AI Tooling, Apps. Languages: " + ", ".join(f"{n} {p}%" for n, p in data["languages"])
+        parts.extend([
+            f'<text x="28" y="{y}" font-family="{FONT}" font-size="15" fill="{t["text"]}">{escape(name)}</text>',
+            f'<rect x="150" y="{y - 10}" width="380" height="8" rx="4" fill="{t["chip"]}"/>',
+            f'<rect x="150" y="{y - 10}" width="{380 * pct / 100:.1f}" height="8" rx="4" fill="{color}"/>',
+            f'<text x="{w - 28}" y="{y}" text-anchor="end" font-family="{MONO}" font-size="14" fill="{t["muted"]}">{pct:g}%</text>',
+        ])
+    label = "Languages by lines added: " + ", ".join(f"{n} {p}%" for n, p in data["languages"])
     return svg(w, h, "\n".join(parts), label)
 
 
@@ -296,7 +224,6 @@ def main():
     for stale in [*ASSETS.glob("stats-*.svg"), *ASSETS.glob("stack-*.svg"), *ASSETS.glob("project-*.svg"), *ASSETS.glob("contrib-*.svg")]:
         stale.unlink()
     for mode, t in THEMES.items():
-        (ASSETS / f"hero-{mode}.svg").write_text(hero(t))
         (ASSETS / f"skills-{mode}.svg").write_text(skills(t, data))
 
 
