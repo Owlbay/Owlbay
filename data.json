@@ -1,28 +1,28 @@
 {
-  "generated": "2026-11-23",
+  "generated": "2026-11-24",
   "joined": "2020-12",
-  "contributions": 3499,
-  "commits": 1476,
-  "merged_prs": 1542,
+  "contributions": 3480,
+  "commits": 1481,
+  "merged_prs": 1549,
   "repositories": 48,
   "followers": 53,
   "code": {
     "repos": 51,
-    "commits": 2943,
-    "lines": 2393900
+    "commits": 2954,
+    "lines": 2405415
   },
   "languages": [
     [
       "TypeScript",
-      38.2
+      38.1
     ],
     [
       "Java",
-      12.6
+      12.5
     ],
     [
       "Go",
-      10.6
+      10.9
     ],
     [
       "JavaScript",
